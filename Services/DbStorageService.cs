@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using tasks.Data;
 
@@ -17,27 +19,33 @@ namespace tasks.Services
             _logger = logger;
         }
 
-        public async Task<List<Entity.Task>> GetTaskAsync(
-             Guid id = default(Guid),
+       public async Task<List<Entity.Task>> GetTasksAsync(
+            Guid id = default(Guid),
             string title = default(string),
             string description = default(string),
             string tags = default(string),
-            Entity.ETaskPriorety? priority = null,
+            Entity.ETaskPriority? priority = null,
             Entity.ETaskRepeat? repeat= null,
             Entity.ETaskStatus? status = null,
             DateTimeOffset onADay = default(DateTimeOffset),
             DateTimeOffset atATime = default(DateTimeOffset),
             string location = default(string),
             string url = default(string))
-            {
-                var tasks = _context.Tasks.AsNoTracking();
-                if(id != default(Guid))
-                {
-                    tasks = tasks.Where(t => t.Title.ToLower().Equals(title.ToLower())
-                    || t.Title.ToLower().Contains(title.ToLower()));
-                }
+        {
+            var tasks = _context.Tasks.AsNoTracking();
 
-                if(tags != default(string))
+            if(id != default(Guid))
+            {
+                tasks = tasks.Where(t => t.Id == id);
+            }
+
+            if(title != default(string))
+            {
+                tasks = tasks.Where(t => t.Title.ToLower().Equals(title.ToLower()) 
+                            || t.Title.ToLower().Contains(title.ToLower()));
+            }
+
+            if(tags != default(string))
             {
                 // TO-DO: optimize
                 tasks = tasks.Where(t => t.Tags.ToLower().Equals(tags.ToLower()));
@@ -79,7 +87,25 @@ namespace tasks.Services
             }
 
             return await tasks.ToListAsync();
+        }
+
+         public async Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entity.Task task)
+        {
+            try
+            {
+                _context.Tasks.Add(task);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"Task inserted in DB: {task.Id}");
+
+                return (true, null);
             }
+            catch(Exception e)
+            {
+                _logger.LogInformation($"Inserting task to DB failed: {e.Message}", e);
+                return (false, e);
+            }
+        }
         
     }
 }

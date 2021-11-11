@@ -2,9 +2,10 @@ namespace tasks.Entity
 {
     public enum ETaskRepeat
     {
-        Hourly,
+         Hourly,
         Daily,
         Weekly,
+        Monthly,
         Yearly,
         Never
     }
