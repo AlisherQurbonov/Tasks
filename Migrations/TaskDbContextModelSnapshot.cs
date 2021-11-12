@@ -19,7 +19,7 @@ namespace tasks.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("tasks.Entity.Task", b =>
+            modelBuilder.Entity("tasks.Entity.Tasking", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -34,7 +34,7 @@ namespace tasks.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("OnAday")
+                    b.Property<DateTimeOffset>("OnADay")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Priorety")

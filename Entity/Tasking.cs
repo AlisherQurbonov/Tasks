@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace tasks.Entity
 {
-    public class Task
+    public class Tasking
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -21,14 +21,14 @@ namespace tasks.Entity
         public DateTimeOffset AtATime { get; set; }
         public ETaskStatus Status { get; set; }
         public ETaskRepeat Repeat { get; set; }
-        public ETaskPriority Priority { get; set; }
+        public ETaskPriorety Priorety { get; set; }
         public string Location { get; set; }
         public string Url { get; set; }
 
         [Obsolete("Used only for entity binding.", true)]
-        public Task() { }
+        public Tasking() { }
 
-        public Task(string title, string description ="", string tags ="" , DateTimeOffset onADay = default(DateTimeOffset), DateTimeOffset atATime = default(DateTimeOffset), ETaskStatus status = ETaskStatus.None, ETaskRepeat repeat = ETaskRepeat.Never, ETaskPriority priority = ETaskPriority.None, string location ="", string url = "" )
+        public Tasking(string title, string description ="", string tags ="" , DateTimeOffset onADay = default(DateTimeOffset), DateTimeOffset atATime = default(DateTimeOffset), ETaskStatus status = ETaskStatus.None, ETaskRepeat repeat = ETaskRepeat.Never, ETaskPriorety priorety = ETaskPriorety.None, string location ="", string url = "" )
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -38,7 +38,7 @@ namespace tasks.Entity
             AtATime = atATime;
             Status = status;
             Repeat = repeat;
-            Priority = priority;
+            Priorety = priorety;
             Location = location;
             Url = url;
         }

@@ -1,6 +1,6 @@
-namespace tasks.Model
+namespace tasks.Entity
 {
-    public enum ETaskPriority
+    public enum ETaskPriorety
     {
         None,
         High,

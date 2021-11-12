@@ -6,13 +6,19 @@ namespace tasks.Services
 {
     public interface IStorageService
     {
-         Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entity.Task task);
-         Task<List<Entity.Task>> GetTasksAsync(
+         Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entity.Tasking task);
+         Task<(bool isSuccess, Exception exception)> UpdateTaskAsync(Entity.Tasking task);
+        Task<(bool IsSuccess, Exception exception)> RemoveAsync(Guid Id);
+         
+         Task<Entity.Tasking> GetTaskingAsync(Guid Id);
+         Task<bool> ExistsAsync(Guid Id);
+
+         Task<List<Entity.Tasking>> GetTasksAsync(
             Guid id = default(Guid),
             string title = default(string),
             string description = default(string),
             string tags = default(string),
-            Entity.ETaskPriority? priority = null,
+            Entity.ETaskPriorety? priorety = null,
             Entity.ETaskRepeat? repeat= null,
             Entity.ETaskStatus? status = null,
             DateTimeOffset onADay = default(DateTimeOffset),

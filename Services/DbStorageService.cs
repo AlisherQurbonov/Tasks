@@ -19,12 +19,14 @@ namespace tasks.Services
             _logger = logger;
         }
 
-       public async Task<List<Entity.Task>> GetTasksAsync(
+
+//   GetTAsk async bu get ni postga qushilganini rekshiradi yani database ni
+       public async Task<List<Entity.Tasking>> GetTasksAsync(
             Guid id = default(Guid),
             string title = default(string),
             string description = default(string),
             string tags = default(string),
-            Entity.ETaskPriority? priority = null,
+            Entity.ETaskPriorety? priority = null,
             Entity.ETaskRepeat? repeat= null,
             Entity.ETaskStatus? status = null,
             DateTimeOffset onADay = default(DateTimeOffset),
@@ -53,7 +55,7 @@ namespace tasks.Services
 
             if(priority.HasValue)
             {
-                tasks = tasks.Where(t => t.Priority == priority.Value);
+                tasks = tasks.Where(t => t.Priorety == priority.Value);
             }
 
             if(status.HasValue)
@@ -89,7 +91,11 @@ namespace tasks.Services
             return await tasks.ToListAsync();
         }
 
-         public async Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entity.Task task)
+
+
+        // Insert bu Post ni boshqarishga yordam beradi
+
+         public async Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entity.Tasking task)
         {
             try
             {
@@ -106,6 +112,62 @@ namespace tasks.Services
                 return (false, e);
             }
         }
+
+
+    //   Remove bu Delete qilib beradi
+        public async Task<(bool IsSuccess, Exception exception)> RemoveAsync(Guid id)
+        {
+             try
+            { 
+                _context.Tasks.Remove(_context.Tasks.FirstOrDefault(u => u.Id == id));
+                await _context.SaveChangesAsync();
+               
+                return (true, null); 
+
+                
+            }
+            
+
+            catch(Exception e)
+            {
+                return (false, e);
+            }
+        }
+
+        // Update bu put ga yordam beradi
+
+        public async Task<(bool isSuccess, Exception exception)> UpdateTaskAsync(Entity.Tasking task)
+        {
+            try
+            {
+                if(await _context.Tasks.AnyAsync(t => t.Id == task.Id))
+                {
+                    _context.Tasks.Update(task);
+                    await _context.SaveChangesAsync();
+
+                    return (true, null);
+                }
+                
+                else
+                {
+                    return (false, new Exception($"Task with given ID: {task.Id} doesnt exist!"));
+                }
+            }
+            catch(Exception e)
+            {
+                return (false, e);
+            }
+        }
+
+
+    //    GetTaking bu Get Id buyicha qidirishga yordam beradi
+            public async Task<Entity.Tasking> GetTaskingAsync(Guid id)
+            => await _context.Tasks.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            
+            
+             public Task<bool> ExistsAsync(Guid Id)
+            => Task.FromResult<bool>(_context.Tasks.Any(u => u.Id == Id));
+        
         
     }
 }
